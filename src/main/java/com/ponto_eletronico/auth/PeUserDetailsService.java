@@ -1,5 +1,7 @@
 package com.ponto_eletronico.auth;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,11 +19,11 @@ public class PeUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Usuario usuario = repository.findByPis(username);
-        if (usuario == null) {
+		Optional<Usuario> usuario = repository.findById(username);
+        if (!usuario.isPresent()) {
             throw new UsernameNotFoundException(username);
         }
-        return new PeUserDetails(usuario);
+        return new PeUserDetails(usuario.get());
 	}
 
 }
