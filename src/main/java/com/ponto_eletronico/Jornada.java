@@ -2,6 +2,7 @@ package com.ponto_eletronico;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class Jornada {
 	private Long id;
 	@NotNull
 	private LocalDate dia;
-	private Double horasTrabalhadas;
-	private Double intervalo;
+	private Integer minutosTrabalhados;
+	private Integer intervalo;
 	@NotNull
 	private boolean intervaloEstaCorreto = true;
 	@NotNull
@@ -73,19 +74,19 @@ public class Jornada {
 		this.dia = dia;
 	}
 
-	public Double getHorasTrabalhadas() {
-		return horasTrabalhadas;
+	public Integer getMinutosTrabalhados() {
+		return minutosTrabalhados;
 	}
 
-	public void setHorasTrabalhadas(Double horasTrabalhadas) {
-		this.horasTrabalhadas = horasTrabalhadas;
+	public void setMinutosTrabalhados(Integer minutosTrabalhados) {
+		this.minutosTrabalhados = minutosTrabalhados;
 	}
 
-	public Double getIntervalo() {
+	public Integer getIntervalo() {
 		return intervalo;
 	}
 
-	public void setIntervalo(Double intervalo) {
+	public void setIntervalo(Integer intervalo) {
 		this.intervalo = intervalo;
 	}
 
@@ -116,10 +117,45 @@ public class Jornada {
 	public void addBatida(Batida batida) {
 		batida.setJornada(this);
 		this.batidas.add(batida);
+		this.calcularJornada();
 	}
 
 	public void removeBatida(Batida batida) {
 		batida.setJornada(null);
 		this.batidas.remove(batida);
+		this.calcularJornada();
+	}
+	
+	private void calcularJornada() {
+		minutosTrabalhados = null;
+		intervalo = null;
+		intervaloEstaCorreto = true;
+		
+		if (batidas.size() > 1) {
+			batidas.sort((Batida batida1, Batida batida2) -> batida1.getHora().compareTo(batida2.getHora()));
+			Batida impar = batidas.get(0);
+			Batida par = null;
+			for (int i = 1; i<batidas.size(); i++) {
+				if (i % 2 == 1) {
+					par = batidas.get(i);
+					somarHorasTrabalhadas(impar, par);
+				} else {
+					impar = batidas.get(i);
+					calcularIntervalo(par, impar);
+				}
+			}
+		}
+	}
+	
+	private void somarHorasTrabalhadas(Batida impar, Batida par) {
+		OffsetTime horaBatidaImpar = impar.getHora();
+		OffsetTime horaBatidaPar = par.getHora();
+		
+		int horas = horaBatidaPar.compareTo(horaBatidaImpar);
+		System.out.println(horas);
+	}
+	
+	private void calcularIntervalo(Batida par, Batida impar) {
+		
 	}
 }

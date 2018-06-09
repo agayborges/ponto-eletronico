@@ -26,14 +26,12 @@ public class JornadaServiceImpl implements JornadaService {
 
 	@Override
 	public List<Jornada> findJornadaPorDia(Usuario usuario, LocalDate data) {
-		// TODO Auto-generated method stub
 		return findJornadaPorPeriodo(usuario, data, null);
 	}
 
 	@Override
 	public List<Jornada> findJornadaPorPeriodo(Usuario usuario, LocalDate dataInicio, LocalDate dataFim) {
-		// TODO Auto-generated method stub
-		return null;
+		return jornadaRepository.findJornadaPorPeriodo(usuario.getPis(), dataInicio, dataFim);
 	}
 
 	@Override
