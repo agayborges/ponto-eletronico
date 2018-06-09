@@ -13,6 +13,10 @@ public class Usuario {
 	public Usuario() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Usuario(String pis) {
+		this.pis = pis;
+	}
 
 	public Usuario(String pis, String senha) {
 		this.pis = pis;
