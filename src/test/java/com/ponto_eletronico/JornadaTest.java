@@ -19,7 +19,7 @@ public class JornadaTest {
 	private OffsetTime hora03 = OffsetTime.of(14, 0, 53, 3, OffsetTime.now().getOffset());
 	Batida batida03 = new Batida(hora03);
 	
-	private OffsetTime hora04 = OffsetTime.of(18, 10, 47, 4, OffsetTime.now().getOffset());
+	private OffsetTime hora04 = OffsetTime.of(18, 0, 47, 4, OffsetTime.now().getOffset());
 	Batida batida04 = new Batida(hora04);
 	
 	private OffsetTime hora05 = OffsetTime.of(23, 30, 31, 5, OffsetTime.now().getOffset());
@@ -43,15 +43,18 @@ public class JornadaTest {
 	// 240min em horario normal
 	Batida[] jornada4h = {batida01, batida02};
 	// 250min em horario normal com 10min de intervalo
-	Batida[] jornada6hSemIntervalo = {batida01, batida03, batida07, batida09};
-	// 260min em horario normal com 20min de intervalo
-	Batida[] jornada6h= {batida01, batida03, batida07, batida08};
+	Batida[] jornada6hSemIntervalo = {batida01, batida02, batida07, batida09};
+	// 315min em horario normal com 20min de intervalo
+	Batida[] jornada6h= {batida01, batida02, batida07, batida08};
 	// 600min em horario normal sem intervalo
 	// 900min no sabado / 1200 min no domingo
 	Batida[] jornadaSemIntervalo = {batida01, batida04};
 	// 250min em horario nortuno + 360min em horario normal -> totais 610 / 660
-	// 1220min no sabado / 1320 min no domingo
+	// 990min no sabado / 1320 min no domingo
 	Batida[] jornadaNoturna = {batida06, batida01, batida04, batida05};
+	// 250min em horario nortuno + 960min em horario normal -> totais 1210 / 1260
+	// 1890min no sabado / 2520 min no domingo
+	Batida[] jornadaMegaNoturna = {batida05, batida06};
 	// 555min em horario normal com 25min de intervalo
 	// 832min no sabado / 1110 min no domingo
 	Batida[] jornadaVariasBatidas = {batida01, batida02, batida03, batida04, batida07, batida08};
@@ -64,42 +67,55 @@ public class JornadaTest {
 		normal.setDia(diaNormal);
 		addBatidas(normal, jornadaNormal);
 		assertTrue(normal.isIntervaloEstaCorreto());
-		assertEquals(480, normal.getMinutosTrabalhados().intValue());
-		assertEquals(120, normal.getIntervalo().intValue());
+		assertEquals(120, normal.getIntervalo());
+		assertEquals(480, normal.getMinutosTrabalhados());
 		
 		normal = new Jornada();
 		normal.setDia(diaNormal);
 		addBatidas(normal, jornada4h);
 		assertTrue(normal.isIntervaloEstaCorreto());
-		assertEquals(240, normal.getMinutosTrabalhados().intValue());
-		assertEquals(0, normal.getIntervalo().intValue());
+		assertEquals(240, normal.getMinutosTrabalhados());
+		assertEquals(0, normal.getIntervalo());
 		
 		normal = new Jornada();
 		normal.setDia(diaNormal);
 		addBatidas(normal, jornada6h);
 		assertTrue(normal.isIntervaloEstaCorreto());
-		assertEquals(250, normal.getMinutosTrabalhados().intValue());
-		assertEquals(20, normal.getIntervalo().intValue());
+		assertEquals(315, normal.getMinutosTrabalhados());
+		assertEquals(20, normal.getIntervalo());
 		
 		normal = new Jornada();
 		normal.setDia(diaNormal);
 		addBatidas(normal, jornada6hSemIntervalo);
 		assertTrue(!normal.isIntervaloEstaCorreto());
-		assertEquals(250, normal.getMinutosTrabalhados().intValue());
-		assertEquals(10, normal.getIntervalo().intValue());
+		assertEquals(250, normal.getMinutosTrabalhados());
+		assertEquals(10, normal.getIntervalo());
 		
 		normal = new Jornada();
 		normal.setDia(diaNormal);
 		addBatidas(normal, jornadaSemIntervalo);
 		assertTrue(!normal.isIntervaloEstaCorreto());
-		assertEquals(600, normal.getMinutosTrabalhados().intValue());
-		assertEquals(0, normal.getIntervalo().intValue());
+		assertEquals(600, normal.getMinutosTrabalhados());
+		assertEquals(0, normal.getIntervalo());
 		
 		normal = new Jornada();
 		normal.setDia(diaNormal);
 		addBatidas(normal, jornadaNoturna);
 		assertTrue(normal.isIntervaloEstaCorreto());
-		assertEquals(660, normal.getMinutosTrabalhados().intValue());
+		assertEquals(660, normal.getMinutosTrabalhados());
+	
+		normal = new Jornada();
+		normal.setDia(diaNormal);
+		addBatidas(normal, jornadaMegaNoturna);
+		assertTrue(!normal.isIntervaloEstaCorreto());
+		assertEquals(1260, normal.getMinutosTrabalhados());
+		
+		normal = new Jornada();
+		normal.setDia(diaNormal);
+		addBatidas(normal, jornadaVariasBatidas);
+		assertTrue(!normal.isIntervaloEstaCorreto());
+		assertEquals(555, normal.getMinutosTrabalhados());
+		assertEquals(25, normal.getIntervalo());
 	}
 	
 	@Test
@@ -107,15 +123,29 @@ public class JornadaTest {
 		LocalDate diaSabado = LocalDate.of(2018, 6, 9);
 		Jornada sabado = new Jornada();
 		sabado.setDia(diaSabado);
+		addBatidas(sabado, jornadaNormal);
 		assertTrue(sabado.isIntervaloEstaCorreto());
-		assertEquals(720, sabado.getMinutosTrabalhados().intValue());
-		assertEquals(120, sabado.getIntervalo().intValue());
+		assertEquals(720, sabado.getMinutosTrabalhados());
+		assertEquals(120, sabado.getIntervalo());
 		
 		sabado = new Jornada();
 		sabado.setDia(diaSabado);
 		addBatidas(sabado, jornadaNoturna);
 		assertTrue(sabado.isIntervaloEstaCorreto());
-		assertEquals(1220, sabado.getMinutosTrabalhados().intValue());
+		assertEquals(990, sabado.getMinutosTrabalhados());
+		
+		sabado = new Jornada();
+		sabado.setDia(diaSabado);
+		addBatidas(sabado, jornadaMegaNoturna);
+		assertTrue(!sabado.isIntervaloEstaCorreto());
+		assertEquals(1890, sabado.getMinutosTrabalhados());
+		
+		sabado = new Jornada();
+		sabado.setDia(diaSabado);
+		addBatidas(sabado, jornadaVariasBatidas);
+		assertTrue(!sabado.isIntervaloEstaCorreto());
+		assertEquals(832, sabado.getMinutosTrabalhados());
+		assertEquals(25, sabado.getIntervalo());
 	}
 	
 	@Test
@@ -123,15 +153,28 @@ public class JornadaTest {
 		LocalDate diaDomingo = LocalDate.of(2018, 6, 10);
 		Jornada domingo = new Jornada();
 		domingo.setDia(diaDomingo);
+		addBatidas(domingo, jornadaNormal);
 		assertTrue(domingo.isIntervaloEstaCorreto());
-		assertEquals(1200, domingo.getMinutosTrabalhados().intValue());
-		assertEquals(120, domingo.getIntervalo().intValue());
+		assertEquals(960, domingo.getMinutosTrabalhados());
+		assertEquals(120, domingo.getIntervalo());
 		
 		domingo = new Jornada();
 		domingo.setDia(diaDomingo);
 		addBatidas(domingo, jornadaNoturna);
 		assertTrue(domingo.isIntervaloEstaCorreto());
-		assertEquals(1320, domingo.getMinutosTrabalhados().intValue());
+		assertEquals(1320, domingo.getMinutosTrabalhados());
+	
+		domingo = new Jornada();
+		domingo.setDia(diaDomingo);
+		addBatidas(domingo, jornadaMegaNoturna);
+		assertTrue(!domingo.isIntervaloEstaCorreto());
+		assertEquals(2520, domingo.getMinutosTrabalhados());
+		
+		domingo = new Jornada();
+		domingo.setDia(diaDomingo);
+		addBatidas(domingo, jornadaVariasBatidas);
+		assertTrue(!domingo.isIntervaloEstaCorreto());
+		assertEquals(1110, domingo.getMinutosTrabalhados());
 	}
 	
 	private void addBatidas(Jornada jornada, Batida[] batidas) {
