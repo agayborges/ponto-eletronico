@@ -1,6 +1,7 @@
 package com.ponto_eletronico;
 
 import java.time.LocalDate;
+import java.time.OffsetTime;
 import java.util.List;
 
 public interface JornadaService {
@@ -10,4 +11,5 @@ public interface JornadaService {
 	List<Jornada> findJornadaPorPeriodo(Usuario usuario, LocalDate dataInicio, LocalDate dataFim);
 	Jornada retriveJornada(Long id);
 	Jornada realizarBatida(String pis);
+	Jornada realizarBatidaExcepcional(Jornada jornada, OffsetTime hora);
 }

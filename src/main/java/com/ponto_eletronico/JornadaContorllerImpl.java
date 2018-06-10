@@ -1,5 +1,6 @@
 package com.ponto_eletronico;
 
+import java.time.OffsetTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,18 @@ public class JornadaContorllerImpl implements JornadaContorller {
 	@PostMapping("/usuarios/{pis}")
 	public Jornada realizarBatida(@PathVariable String pis) {
 		return jornadaService.realizarBatida(pis);
+	}
+	
+	@Override
+	@PostMapping("/{id}")
+	public Jornada realizarBatidaExcepcional(@PathVariable String id, OffsetTime hora) {
+		Jornada jornada = new Jornada();
+		try {
+			jornada.setId(Long.parseLong(id));
+		} catch (NumberFormatException e) {
+			throw new PeException("Id com formato inválido");
+		}
+		return jornadaService.realizarBatidaExcepcional(jornada, hora);
 	}
 
 	

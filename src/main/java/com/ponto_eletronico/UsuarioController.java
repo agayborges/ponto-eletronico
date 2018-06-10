@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,25 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
 
 	@Autowired
-	private UsuarioRepository repository;
+	private UsuarioService service;
 	
 	@GetMapping
 	public Iterable<Usuario> retrieveAllUsuarios() {
-		return repository.findAll();
+		return service.retrieveAllUsuarios();
 	}
 	
+	@ExceptionHandler(PeException.class)
 	@PostMapping
 	public void saveUsuario(@RequestBody Usuario usuario) {
-		repository.save(usuario);
+		service.saveUsuario(usuario);
 	}
 	
 	@DeleteMapping
 	public void deleteUsaurio(@RequestBody Usuario usuario) {
-		repository.delete(usuario);
+		service.deleteUsaurio(usuario);
 	}
 	
 	@GetMapping("/{pis}")
 	public Optional<Usuario> retrieveUsuario(@PathVariable String pis) {
-		return repository.findById(pis);
+		return service.retrieveUsuario(pis);
 	}
 }
