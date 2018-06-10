@@ -87,7 +87,7 @@ public class JornadaRepositoryTest {
 	public void testBatida() {
 		Batida batida = new Batida(time01);
 		Batida batidaMais10Min = new Batida(time01.plusMinutes(10));
-		Batida batidaMesmoMinuto = new Batida(time01.plusSeconds(10));
+		Batida batidaMesmoMinuto = new Batida(time01.plusSeconds(1));
 		
 		try {
 			jornada01.addBatida(batida);
