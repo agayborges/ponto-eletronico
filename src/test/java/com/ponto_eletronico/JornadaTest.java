@@ -182,5 +182,6 @@ public class JornadaTest {
 			Batida batida = batidas[i];
 			jornada.addBatida(batida);
 		}
+		jornada.calcularJornada();
 	}
 }

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -43,6 +45,19 @@ public class JornadaRepositoryImpl implements JornadaRepositoryCustom {
         }
         query.where(cb.and(predicateList.toArray(new Predicate[predicateList.size()])));
 		return em.createQuery(query).getResultList();
+	}
+
+	@Override
+	public Jornada findJornadaPorBatida(Batida batida) throws NonUniqueResultException {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Jornada> query = cb.createQuery(Jornada.class);
+        Root<Jornada> r = query.from(Jornada.class);
+        
+        Join<Jornada, Batida> batidaRoot = r.join(Jornada_.batidas);
+        
+        query.where(cb.equal(batidaRoot.get(Batida_.id), batida.getId()));
+        
+		return em.createQuery(query).getSingleResult();
 	}
 
 }

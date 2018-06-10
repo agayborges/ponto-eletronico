@@ -33,8 +33,6 @@ public class Jornada {
 	private static final int LIMITE_NOTURNO_MANHA = 360; 
 	private static final int LIMITE_NOTURNO_NOITE = 1320; 
 	
-	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -139,16 +137,14 @@ public class Jornada {
 	public void addBatida(Batida batida) {
 		batida.setJornada(this);
 		this.batidas.add(batida);
-		this.calcularJornada();
 	}
 
 	public void removeBatida(Batida batida) {
 		batida.setJornada(null);
 		this.batidas.remove(batida);
-		this.calcularJornada();
 	}
 	
-	private void calcularJornada() {
+	public void calcularJornada() {
 		this.minutosTrabalhados = 0;
 		this.minutosTrabalhadosCorridos = 0;
 		this.intervalo = 0;

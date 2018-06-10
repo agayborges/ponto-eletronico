@@ -1,14 +1,15 @@
 package com.ponto_eletronico;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class JornadaRequestParam {
 
 	private JornadaFindMode mode;
 	private int ano;
 	private int mes;
-	private LocalDate data;
-	private LocalDate dataFinal;
+	private Date data;
+	private Date dataFinal;
+	private String pis;
 	
 	public JornadaRequestParam() {
 		// TODO Auto-generated constructor stub
@@ -38,20 +39,28 @@ public class JornadaRequestParam {
 		this.mes = mes;
 	}
 
-	public LocalDate getData() {
+	public Date getData() {
 		return data;
 	}
 
-	public void setData(LocalDate data) {
+	public void setData(Date data) {
 		this.data = data;
 	}
 
-	public LocalDate getDataFinal() {
+	public Date getDataFinal() {
 		return dataFinal;
 	}
 
-	public void setDataFinal(LocalDate dataFinal) {
+	public void setDataFinal(Date dataFinal) {
 		this.dataFinal = dataFinal;
+	}
+
+	public String getPis() {
+		return pis;
+	}
+
+	public void setPis(String pis) {
+		this.pis = pis;
 	}
 
 }

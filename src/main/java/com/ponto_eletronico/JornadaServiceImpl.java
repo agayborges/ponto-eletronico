@@ -6,6 +6,8 @@ import java.time.OffsetTime;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.NonUniqueResultException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,7 @@ public class JornadaServiceImpl implements JornadaService {
 		
 		if (mes < 1 || mes > 12) {
 			if (erro != null) {
-				erro += "/n";
+				erro += "\n";
 			}
 			erro += "Mês invalido";
 		}
@@ -54,7 +56,11 @@ public class JornadaServiceImpl implements JornadaService {
 		if (dataInicio == null) {
 			throw new PeException("Data Inicio não pode ser nula");
 		}
-		return jornadaRepository.findJornadaPorPeriodo(usuario.getPis(), dataInicio, dataFim);
+		String pis = null;
+		if (usuario != null) {
+			pis = usuario.getPis();
+		}
+		return jornadaRepository.findJornadaPorPeriodo(pis, dataInicio, dataFim);
 	}
 
 	@Override
@@ -69,7 +75,7 @@ public class JornadaServiceImpl implements JornadaService {
 		}
 		OffsetDateTime dataAtual = OffsetDateTime.now();
 		LocalDate dataJornada = dataAtual.toLocalDate();
-		OffsetTime horaAtual = dataAtual.toOffsetTime();
+		OffsetTime horaAtual = dataAtual.toOffsetTime().withSecond(0).withNano(0);
 		
 		List<Jornada> jornadas = jornadaRepository.findJornadaPorPeriodo(pis, dataJornada, null);
 		Batida batida = new Batida(horaAtual);
@@ -85,6 +91,8 @@ public class JornadaServiceImpl implements JornadaService {
 		}
 		
 		jornada = jornadaRepository.save(jornada);
+		jornada.calcularJornada();
+		jornada = jornadaRepository.save(jornada);
 		
 		return jornada;
 	}
@@ -98,10 +106,40 @@ public class JornadaServiceImpl implements JornadaService {
 			Batida batida = new Batida(hora);
 			jornada.addBatida(batida);
 			jornada = jornadaRepository.save(jornada);
+			jornada.calcularJornada();
+			jornada = jornadaRepository.save(jornada);
 		} else {
 			throw new PeException("Jornada inexistente");
 		}
 		
 		return jornada;
+	}
+
+	@Override
+	public Jornada removerBatida(Batida batida) {
+		Jornada jornada;
+		try {
+			jornada = jornadaRepository.findJornadaPorBatida(batida);
+			Batida batidaRecuperada = jornada.getBatidas().stream().filter(b -> b.getId() == batida.getId()).findFirst().get();
+			jornada.removeBatida(batidaRecuperada);
+			jornadaRepository.save(jornada);
+			jornada.calcularJornada();
+			jornada = jornadaRepository.save(jornada);
+		} catch (NonUniqueResultException e) {
+			throw new PeException("Jornada não encontrada");
+		}
+		
+		return jornada;
+	}
+
+	@Override
+	public void removeJornada(long id) {
+		jornadaRepository.deleteById(id);
+	}
+
+	@Override
+	public Jornada obterJornada(long id) {
+		Optional<Jornada> jornada = jornadaRepository.findById(id);
+		return jornada.orElse(null);
 	}
 }

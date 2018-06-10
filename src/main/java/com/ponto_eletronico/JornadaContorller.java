@@ -1,11 +1,13 @@
 package com.ponto_eletronico;
 
-import java.time.OffsetTime;
 import java.util.List;
 
 public interface JornadaContorller {
 
-	List<Jornada> findJornada(String pis, JornadaRequestParam param);
+	List<Jornada> findJornada(JornadaRequestParam param);
 	Jornada realizarBatida(String pis);
-	Jornada realizarBatidaExcepcional(String id, OffsetTime hora);
+	Jornada realizarBatidaExcepcional(String id, Hora hora);
+	Jornada removeBatida(long batidaId);
+	void removeJornada(long id);
+	Jornada obterJornada(long id);
 }

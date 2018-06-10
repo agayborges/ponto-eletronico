@@ -12,4 +12,7 @@ public interface JornadaService {
 	Jornada retriveJornada(Long id);
 	Jornada realizarBatida(String pis);
 	Jornada realizarBatidaExcepcional(Jornada jornada, OffsetTime hora);
+	Jornada removerBatida(Batida batida);
+	void removeJornada(long id);
+	Jornada obterJornada(long id);
 }

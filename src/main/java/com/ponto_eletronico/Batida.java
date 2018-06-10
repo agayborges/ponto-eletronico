@@ -58,7 +58,7 @@ public class Batida {
 	}
 
 	public void setHora(OffsetTime hora) {
-		this.hora = hora.withSecond(0);
+		this.hora = hora.withSecond(0).withNano(0);
 	}
 	
 }
